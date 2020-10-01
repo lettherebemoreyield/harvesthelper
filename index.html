@@ -30,7 +30,7 @@
 	.prices{
 		font-size: 130%;
 		margin-left: 45%;
-		width : 250px;
+		width : 450px;
 		text-align: left;
 	}
 	html { 
@@ -69,7 +69,11 @@
   <div class="prices">
   <p id="finalPrice"></p>
   </div>
-  <br>
+<br>
+ <h2>Footnotes</h2>
+  <p>
+* Rewards include $FARM asset
+ <br>
   <h2>Donations</h2>
   <p>
   Thanks for visiting!<br><br>
@@ -133,6 +137,8 @@
 		var extraRewards = (0);
 		var totalRewards = (dailyRewards+extraRewards);
 		var earnings = (totalRewards-usdPrice);
+		var daysuntilrewards = (usdPrice/totalRewards);
+		var daysuntileffective = ((usdPrice*20)/totalRewards);
 		//chadfarmer
 		var apyCRV2 = (20.44);
 		var aprCRV2 = (apyCRV2/365);
@@ -144,18 +150,22 @@
  
  document.getElementById("finalPrice").innerHTML =
 		"<h2>Solo Farmer:</h2>" +
-		"<br>APY (estimate)&nbsp;" + apyCRV.toFixed(2) + "%" +
-		"<br>APR (daily)&nbsp;" + aprCRV.toFixed(4) + "%" +
-		"<br>Total Rewards&nbsp;$" + totalRewards.toFixed(2) +
-   		"<br>Cost to Compound&nbsp;$" + usdPrice.toFixed(2) +
-		"<br>Profit per Day&nbsp;$" + earnings.toFixed(2) +
+		"<br>APY (estimate):&nbsp;" + apyCRV.toFixed(2) + "%" +
+		"<br>APR (daily):&nbsp;" + aprCRV.toFixed(4) + "%" +
+		"<br>Total Rewards:&nbsp;$" + totalRewards.toFixed(2) +
+   		"<br>Cost to Compound:&nbsp;$" + usdPrice.toFixed(2) +
+		"<br>Profit per Day:&nbsp;$" + earnings.toFixed(2) +
+		"<br>Days: Rewards > Gas:&nbsp;" + daysuntilrewards.toFixed(2) +
+		"<br>Days: Compounding <= 5%:&nbsp;" + daysuntileffective.toFixed(2) +
 		"<br>" +
 				"<h2>Chad Farmer:</h2>" +
 		"<br>APY (estimate)&nbsp;" + apyCRV2.toFixed(2) + "%" +
 		"<br>APR (daily)&nbsp;" + aprCRV2.toFixed(4) + "%" +
-		"<br>Total Rewards&nbsp;$" + totalRewards2.toFixed(2) +
+		"<br>Total Rewards*&nbsp;$" + totalRewards2.toFixed(2) +
    		"<br>Cost to Compound&nbsp;$" + "0.01" +
-		"<br>Profit per Day&nbsp;$" + earnings2.toFixed(2)
+		"<br>Profit per Day&nbsp;$" + earnings2.toFixed(2) +
+		"<br>Days: Rewards > Gas:&nbsp;" + "0" +
+		"<br>Days: Compounding <= 5%:&nbsp;" + "0" 
    		;
    	}
 	
