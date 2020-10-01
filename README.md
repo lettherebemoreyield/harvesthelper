@@ -12,6 +12,7 @@ Completed:
 Things to do:
 1. Get live APR rates from CMC for Curve/Harvest.
 2. Calculate APY based on APR variables in CMC.
+3. Implement UNI Strategy logic. (CRV only for now)
 
 Thanks
 ~lettherebemoreyield
