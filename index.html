@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="ethicon.png">
+    <title>Manual Farming Gas Calculator</title>
+    <style>
+	body {background-color: powderblue;}
+	h1   {color: white; font-family: monospace; text-shadow: 3px 2px black;}
+	h2   {color: white; font-family: monospace; text-shadow: 3px 2px black;}
+	h3   {color: white; font-family: monospace; text-shadow: 3px 2px black;}
+	p    {color: white; font-family: monospace; text-shadow: 3px 2px black;}
+	.outer {
+    display: table;
+    position: absolute;
+    height: 99%;
+    width: 99%;
+	}
+
+	.middle {
+	    display: table-cell;
+	    vertical-align: middle;
+	}
+
+	.inner {
+	    margin: auto;
+	    text-align: center;
+	}
+
+	.prices{
+		font-size: 130%;
+		margin-left: 45%;
+		width : 250px;
+		text-align: left;
+	}
+	html { 
+
+        background: url('bg.jpg') no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+  </style>
+  </head>
+  <body>
+  <div class="outer">
+  <div class="middle">
+  <div class="inner">
+  <script src="jq.js" type="text/javascript"></script>
+  <img src="harvest.gif"  width="50" height="50">
+  <h1>Harvest.Finance Calculator</h1>
+ 
+ <h2>Initial Investment $USD:</h2>
+  <input type="number" id="initialInvestment"  onkeypress="updateFinalPrice()"><br>
+
+ <h2>Farming Strategy:</h2>
+<center>
+  <input type="radio" id="crv" name="strategy" value="crv">
+<label for="crv">CRV</label><br>
+<input type="radio" id="uni" name="strategy" value="uni">
+<label for="female">UNI</label><br></center>
+  <input type="hidden" id="gasLimitCounter"  onkeypress="updateFinalPrice()"><br>
+  <input type="button"  onkeypress="updateFinalPrice()" onclick="numberShortcut('gasLimitCounter', 200000)" value="Get Results">
+  
+  <br>
+ 
+  
+  <div class="prices">
+  <p id="finalPrice"></p>
+  </div>
+  <br>
+  <h2>Donations</h2>
+  <p>
+  Thanks for visiting!<br><br>
+  ETH 0x2ef92ae40d1DC7f4Cf2fA3569D0671ddA33c7915<br></p>
+  </div>
+  </div>
+  </div>
+  <script>
+  	var ethPriceBtc = 0;
+  	var ethPriceUsd = 0;
+
+  	var eurPriceUsd = 0;
+  	var brlPriceUsd = 0;
+  	var cadPriceUsd = 0;
+  	var gbpPriceUsd = 0;
+  	var jpyPriceUsd = 0;
+	var gweiStandard = 0;
+
+  	window.onload = $(function() {
+  		updateFinalPrice();
+  		function getValues(){
+	   		$.getJSON("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd", function(data) {
+	          ethPriceUsd = data.ethereum.usd;
+	     	});
+			$.getJSON("https://api.harvest.finance/cmc?key=fc8ad696-7905-4daa-a552-129ede248e33", function(data) {
+	          harvestUSDCapr = data.pools[2].apr;
+	     	});
+	   		$.getJSON("https://api.coingecko.com/api/v3/simple/price?ids=harvest-finance&vs_currencies=usd", function(data) {
+	          harvestPriceUsd = data.harvest-finance.usd;
+	     	});
+	     	$.getJSON("https://www.etherchain.org/api/gasPriceOracle", function(data) {
+	          gweiSafe = data.safeLow;
+			  gweiStandard = data.standard;
+	          gweiFast = data.fast;
+	          gweiFastest = data.fastest;
+	
+	     	});
+	     	updateFinalPrice();
+	     	setTimeout(getValues, 15000);
+   		}
+
+   		getValues();
+   });
+
+  	function numberShortcut(id, value){
+  		document.getElementById(id).value = value;
+  		updateFinalPrice();
+  	}
+
+  	function updateFinalPrice(){
+   		var gweiPrice = (gweiStandard*4*document.getElementById('gasLimitCounter').value);
+   		var ethPrice = (gweiPrice*Math.pow(10,-9));
+		var usdPrice = (ethPrice*ethPriceUsd);
+		var crvPrice = (1*ethPriceUsd);
+		
+		//solofarmer
+		var apyCRV = (15);
+		var aprCRV = (apyCRV/365);
+		var initialInvestment = (document.getElementById('initialInvestment').value);
+		var dailyRewards = (initialInvestment*aprCRV/100);
+		var extraRewards = (0);
+		var totalRewards = (dailyRewards+extraRewards);
+		var earnings = (totalRewards-usdPrice);
+		//chadfarmer
+		var apyCRV2 = (20.44);
+		var aprCRV2 = (apyCRV2/365);
+		var dailyRewards2 = (initialInvestment*aprCRV2/100);
+		var extraRewards2 = (initialInvestment*0.000916);
+		var totalRewards2 = (dailyRewards2+extraRewards2);
+		var earnings2 = (totalRewards2-0.01);
+
+ 
+ document.getElementById("finalPrice").innerHTML =
+		"<h2>Solo Farmer:</h2>" +
+		"<br>APY (estimate)&nbsp;" + apyCRV.toFixed(2) + "%" +
+		"<br>APR (daily)&nbsp;" + aprCRV.toFixed(4) + "%" +
+		"<br>Total Rewards&nbsp;$" + totalRewards.toFixed(2) +
+   		"<br>Cost to Compound&nbsp;$" + usdPrice.toFixed(2) +
+		"<br>Profit per Day&nbsp;$" + earnings.toFixed(2) +
+		"<br>" +
+				"<h2>Chad Farmer:</h2>" +
+		"<br>APY (estimate)&nbsp;" + apyCRV2.toFixed(2) + "%" +
+		"<br>APR (daily)&nbsp;" + aprCRV2.toFixed(4) + "%" +
+		"<br>Total Rewards&nbsp;$" + totalRewards2.toFixed(2) +
+   		"<br>Cost to Compound&nbsp;$" + "0.01" +
+		"<br>Profit per Day&nbsp;$" + earnings2.toFixed(2)
+   		;
+   	}
+	
+	
+  </script>
+  
+  
+  
+  
+  </body>
+</html>
